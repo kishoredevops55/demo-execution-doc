@@ -1,0 +1,257 @@
+##### helm monitoring stack deployment instructions ######
+
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update 
+helm install datasource bitnami/kube-prometheus
+
+helm repo update 
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install dashboard bitnami/grafana
+
+helm repo add loki https://grafana.github.io/loki/charts
+helm repo update 
+helm upgrade --install loki loki/loki-stack
+
+helm repo add azure-marketplace https://marketplace.azurecr.io/helm/v1/repo
+helm repo update 
+helm install kishore-jenkins azure-marketplace/jenkins
+
+// kubernetes  secret and service commands 
+
+kubectl expose service kishore-monitoring-grafana --type=NodePort --target-port=3000 --name=kishore-grafana
+kubectl expose service my-release-kube-prometheus-prometheus --type=NodePort --target-port=9090 --name=prom-server
+
+//grafana password 
+kubectl get secret dashboard-grafana-admin --namespace default -o jsonpath="{.data.GF_SECURITY_ADMIN_PASSWORD}"
+
+//loki password
+kubectl get secret loki-grafana -o jsonpath="{.data.admin-password}"
+
+// springboot application
+
+helm upgrade spring-boot-helloworld ./spring-boot-helloworld-chart/ -f ./spring-boot-helloworld-chart/values.yaml --install --namespace default
+kubectl get pods
+helm ls
+helm rollback spring-boot-helloworld <revision no>
+
+//pod exec
+
+kubectl exec --stdin --tty shell-demo -- /bin/bash
+
+//basic commands 
+kubectl get pods
+helm list
+kubectl get ns
+kubectl get svc
+kubectl get servicemonitor
+helm list
+kubectl get all
+
+
+****************************************************************************************************
+
+#### Terraform commands ####
+
+# Initialize Terraform
+terraform init
+
+# Validate Terraform configuration files
+terraform validate
+
+# Format Terraform configuration files
+terraform fmt
+
+# Review the terraform plan
+terraform plan 
+
+# Create Resources (Optional)
+terraform apply -auto-approve
+
+# Access Application
+http://<Public-DNS>
+
+# Destroy Resources
+terraform destroy -auto-approve
+
+# Initialize Terraform
+terraform init
+
+# Create Plan 
+terraform plan -out=v1plan.out
+
+# Read the plan 
+terraform show v1plan.out
+
+# Read the plan in json format
+terraform show -json v1plan.out
+
+# Terraform Refresh
+terraform refresh
+
+# Terraform Plan
+terraform plan
+
+# Terraform Apply
+terraform apply -auto-approve
+
+# List Resources from Terraform State
+terraform state list
+
+# Show the attributes of a single resource from Terraform State
+terraform  state show data.aws_ami.amzlinux
+terraform  state show aws_instance.my-ec2-vm
+
+# Terraform List Resources
+terraform state list
+
+# Terraform State Move Resources to different name
+terraform state mv -dry-run aws_instance.my-ec2-vm aws_instance.my-ec2-vm-new 
+terraform state mv aws_instance.my-ec2-vm aws_instance.my-ec2-vm-new 
+
+terraform state list
+
+# Remove Resources from Terraform State
+terraform state rm -dry-run aws_instance.my-ec2-vm-new
+terraform state rm aws_instance.my-ec2-vm-new
+Observation: 
+1) Firstly takes backup of current state file before removing (example: terraform.tfstate.1611930284.backup)
+2) Removes it from terraform.tfstate file
+
+# Other State Commands (Pull / Push)
+terraform state pull
+terraform state push
+
+# Manually Unlock the State
+terraform force-unlock LOCK_ID
+
+# List Resources from state
+terraform state list
+
+# Taint a Resource
+terraform taint <RESOURCE_NAME_IN_TERRAFORM_LOCALLY>
+terraform taint aws_instance.my-ec2-vm-new
+
+# Terraform Plan
+terraform plan
+Observation: 
+Message: "-/+ destroy and then create replacement"
+
+# Untaint a Resource
+terraform untaint <RESOURCE_NAME_IN_TERRAFORM_LOCALLY>
+terraform untaint aws_instance.my-ec2-vm-new
+
+# Terraform Plan
+terraform plan
+Observation: Message: "No changes. Infrastructure is up-to-date."
+
+terraform state list
+
+# Terraform plan
+terraform plan -target=aws_instance.my-ec2-vm-new
+Observation:
+0) Message: "Plan: 0 to add, 2 to change, 0 to destroy."
+1) It is updating Change-1 because we are targeting that resource "aws_instance.my-ec2-vm-new"
+2) It is updating change-2 "vpc-web" because its a dependent resource for "aws_instance.my-ec2-vm-new"
+3) It is not touching the new resource which we are creating now. It will be in terraform configuration but not getting provisioned when we are using -target
+
+# Terraform Apply
+terraform apply -target=aws_instance.my-ec2-vm-n
+
+terraform destroy -auto-approve
+
+# Terraform Init
+terraform init 
+
+# List Workspaces
+terraform workspace list
+
+# Output Current Workspace using show
+terraform workspace show
+
+# Terraform Plan
+terraform plan
+Observation: This should show us two instances based on the statement in EC2 Instance Resource "count = terraform.workspace == "default" ? 2 : 1" because we are creating this in default workspace
+
+# Terraform Apply
+terraform apply -auto-approve
+
+# Create New Workspace
+terraform workspace new dev
+
+# Verify the folder
+cd terraform.tfstate.d 
+cd dev
+ls
+cd ../../
+
+# Terraform Plan
+terraform plan
+Observation:  This should show us creating only 1 instance based on statement "count = terraform.workspace == "default" ? 2 : 1" as we are creating this in non-default workspace named dev
+
+# Terraform Apply
+terraform apply -auto-approve
+
+# Verify Dev Workspace statefile
+cd terraform.tfstate.d/dev
+ls
+cd ../../
+Observation: You should fine "terraform.tfstate" in "current-working-directory/terraform.tfstate.d/dev" folder
+
+# Verify EC2 Instance in AWS mgmt console
+Observation:
+1) Name should be with "vm-dev-0"
+2) Security Group names should be as "vpc-ssh-dev, vpc-web-dev"
+
+# Show current workspace
+terraform workspace show
+
+# List Worksapces
+terraform workspace list
+
+# Workspace select
+terraform workspace select default
+
+# Delete Resources from default workspace
+terraform destroy 
+
+# Verify
+1) Verify in AWS Mgmt Console (both instances and security groups should be deleted
+
+
+***************************************************************************************
+
+#### Golang ####
+
+//rest api
+{
+    "FirstName":"testing1",
+    "LastName":"s",
+    "Email":"kishore@gmail.com"
+}
+
+
+
+http://localhost:9000/users
+
+//go execution
+
+# package 
+
+go mod init <folder name >
+
+# download all the dependencies 
+
+go mod tidy
+
+# pull the dependencies
+
+go get -u <dependencies>
+
+# running go program 
+
+go run main.go
+
+# builiding package
+
+go build 
+
