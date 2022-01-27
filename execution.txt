@@ -48,6 +48,29 @@ helm list
 kubectl get all
 
 
+Deployment URL's
+
+//grafana 
+
+http://localhost:31410/    
+
+
+// prom
+
+http://localhost:31091/
+
+// jenkins 
+
+http://localhost
+
+// spring boot 
+
+http://localhost:31000/helloworld/
+
+   
+
+
+
 ****************************************************************************************************
 
 #### Terraform commands ####
