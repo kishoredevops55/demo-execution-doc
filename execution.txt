@@ -67,7 +67,7 @@ http://localhost
 
 http://localhost:31000/helloworld/
 
-   
+count({__name__=~".+"}) by(job,cluster,namespace)
 
 
 
