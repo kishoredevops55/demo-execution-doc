@@ -1,1 +1,3 @@
 https://www.containiq.com/post/promql-cheat-sheet-with-examples
+https://www.opsramp.com/prometheus-monitoring/promql/
+https://gist.github.com/max-rocket-internet/6a05ee757b6587668a1de8a5c177728b
