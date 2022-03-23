@@ -22,3 +22,11 @@ sudo apt-get update -y
 sudo apt-get install conntrack -y
 
 
+
+
+minikube start --driver=none
+ helm install my-release -f values.yaml bitnami/mysql
+ 
+ tar -xvzf
+
+
