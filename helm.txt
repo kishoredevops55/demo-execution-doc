@@ -32,4 +32,6 @@ minikube start --driver=none
  
  tar -xvzf
 
+https://stackoverflow.com/questions/70744776/how-to-get-repository-name-using-multiple-checkout
+
 
